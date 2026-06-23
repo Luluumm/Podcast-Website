@@ -9,7 +9,7 @@
 </head>
 <body>
 
-    <header class="header">
+    <header class="header" id="header">
         <div class="header-container">
             <div class="logo-section">
                 <img src="/static/logo-tae.png" alt="Tomás Alva Edison" class="logo-img">
@@ -30,23 +30,32 @@
 
     
     <section class="hero-banner">
+        <div class="banner-overlay"></div>
         <img src="/static/podcast-banner.png" alt="Podcast Platform" class="banner-image">
+        <div class="banner-caption">
+            <h1>Podcast Escolares</h1>
+            <p>Voces que inspiran, historias que conectan</p>
+        </div>
     </section>
 
 
     <div class="main-content">
         <div class="podcasts-section">
-  
+            <div class="section-header">
+                <h2 class="section-title">Episodios Recientes</h2>
+                <div class="section-divider"></div>
+            </div>
+
             <div class="podcast-row">
                 PODCASTS_GRID_ROW_1
             </div>
 
- 
+  
             <div class="podcast-row">
                 PODCASTS_GRID_ROW_2
             </div>
 
-   
+    
             <div class="podcast-row">
                 PODCASTS_GRID_ROW_3
             </div>
@@ -56,14 +65,21 @@
         <aside class="sidebar">
             <div class="sidebar-item">
                 <div class="sidebar-waveform"></div>
-                <p class="sidebar-description">Escucha nuestros mejores podcasts. Windows y cuidado de la seguridad de las recomendaciones</p>
-            </div>
-            <div class="sidebar-item">
-                <div class="sidebar-waveform"></div>
-                <p class="sidebar-description">Escucha nuestros mejores podcasts. Windows y cuidado de la seguridad de las recomendaciones</p>
+                <button class="sidebar-btn" id="infoBtn">Click aquí!!</button>
             </div>
 
         </aside>
+
+        <!-- Info Modal -->
+        <div id="infoModal" class="modal-overlay">
+            <div class="modal-content">
+                <button class="modal-close">&times;</button>
+                <div class="modal-body">
+                    <h2>Información</h2>
+                    <p>Aquí puedes mostrar la información que quieras.</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     
@@ -99,10 +115,19 @@
 
     <footer class="footer">
         <div class="footer-content">
-            <h3>Estudiante News</h3>
-            <p class="footer-text">
-                Derechos de Autor © Incorpora Corporation S.A. | Av. Corrientes 255, Piso 6, Buenos Aires, Argentina. RNSMA 1234 - Secretaría 251-3070 - Mail: info@tademos.news
-            </p>
+            <div class="footer-brand">
+                <h3>Estudiante News</h3>
+                <p class="footer-tagline">La voz de los estudiantes</p>
+            </div>
+            <div class="footer-divider"></div>
+            <div class="footer-bottom">
+                <p class="footer-text">
+                    &copy; 2026 Incorpora Corporation S.A. &mdash; Av. Corrientes 255, Piso 6, Buenos Aires, Argentina
+                </p>
+                <p class="footer-contact">
+                    <i class="fas fa-envelope"></i> info@tademos.news &nbsp;|&nbsp; <i class="fas fa-phone"></i> 251-3070
+                </p>
+            </div>
         </div>
     </footer>
 
@@ -240,6 +265,44 @@
             playBtn.style.display = 'block';
             pauseBtn.style.display = 'none';
         });
+
+        // Info modal
+        const infoBtn = document.getElementById('infoBtn');
+        const infoModal = document.getElementById('infoModal');
+        const modalClose = document.querySelector('.modal-close');
+
+        infoBtn.addEventListener('click', () => {
+            infoModal.style.display = 'flex';
+        });
+
+        modalClose.addEventListener('click', () => {
+            infoModal.style.display = 'none';
+        });
+
+        infoModal.addEventListener('click', (e) => {
+            if (e.target === infoModal) {
+                infoModal.style.display = 'none';
+            }
+        });
+
+        // Sticky header shadow on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            header.classList.toggle('header-scrolled', window.scrollY > 20);
+        });
+
+        // Scroll reveal animation
+        const revealElements = document.querySelectorAll('.podcast-row, .sidebar-item, .section-header');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
     </script>
 </body>
 </html>
