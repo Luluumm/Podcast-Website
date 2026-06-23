@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podcasts - Tomás Alva Edison</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-section">
+                <img src="/static/logo-tae.png" alt="Tomás Alva Edison" class="logo-img">
+                <span class="school-name">TOMÁS ALVA EDISON</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#nosotros" class="nav-link">NOSOTROS</a>
+                <a href="#eventos" class="nav-link">EVENTOS</a>
+                <a href="#menciones" class="nav-link">MENCIONES</a>
+            </nav>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    
+    <section class="hero-banner">
+        <img src="/static/podcast-banner.png" alt="Podcast Platform" class="banner-image">
+    </section>
+
+
+    <div class="main-content">
+        <div class="podcasts-section">
+  
+            <div class="podcast-row">
+                PODCASTS_GRID_ROW_1
+            </div>
+
+ 
+            <div class="podcast-row">
+                PODCASTS_GRID_ROW_2
+            </div>
+
+   
+            <div class="podcast-row">
+                PODCASTS_GRID_ROW_3
+            </div>
+        </div>
+
+  
+        <aside class="sidebar">
+            <div class="sidebar-item">
+                <div class="sidebar-waveform"></div>
+                <p class="sidebar-description">Escucha nuestros mejores podcasts. Windows y cuidado de la seguridad de las recomendaciones</p>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-waveform"></div>
+                <p class="sidebar-description">Escucha nuestros mejores podcasts. Windows y cuidado de la seguridad de las recomendaciones</p>
+            </div>
+
+        </aside>
+    </div>
+
+    
+    <section class="upload-section">
+        <div class="upload-container">
+            <h2>Subir Nuevo Podcast</h2>
+            <form action="/guardar" method="POST" enctype="multipart/form-data" class="upload-form">
+                <div class="form-group">
+                    <label for="usuario">Usuario</label>
+                    <select id="usuario" name="usuario" required>
+                        <option value="">Selecciona un usuario...</option>
+                        USUARIOS_AQUI
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="titulo">Título del Podcast</label>
+                    <input id="titulo" name="titulo" type="text" placeholder="Ingresa el título del podcast" required>
+                </div>
+                <div class="form-group">
+                    <label for="audio">Archivo MP3</label>
+                    <label for="audio" class="file-input-wrapper">
+                        <input id="audio" name="audio" type="file" accept=".mp3,audio/mpeg" required>
+                        <span class="file-input-label">Selecciona un archivo MP3...</span>
+                    </label>
+                </div>
+                <button type="submit" class="upload-button">
+                    <i class="fas fa-upload"></i> Subir Podcast
+                </button>
+            </form>
+        </div>
+    </section>
+
+
+    <footer class="footer">
+        <div class="footer-content">
+            <h3>Estudiante News</h3>
+            <p class="footer-text">
+                Derechos de Autor © Incorpora Corporation S.A. | Av. Corrientes 255, Piso 6, Buenos Aires, Argentina. RNSMA 1234 - Secretaría 251-3070 - Mail: info@tademos.news
+            </p>
+        </div>
+    </footer>
+
+
+    <div id="audioPlayer" class="audio-player-modal">
+        <div class="audio-player-content">
+            <button class="close-player">&times;</button>
+            <div class="player-header">
+                <h3 id="playerTitle">Podcast Title</h3>
+                <p id="playerArtist">Artist Name</p>
+            </div>
+            <div class="player-controls">
+                <button id="playBtn" class="control-btn play-btn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button id="pauseBtn" class="control-btn pause-btn" style="display:none;">
+                    <i class="fas fa-pause"></i>
+                </button>
+                <div class="progress-container">
+                    <span id="currentTime">0:00</span>
+                    <input type="range" id="progressBar" class="progress-bar" min="0" max="100" value="0">
+                    <span id="duration">0:00</span>
+                </div>
+                <div class="volume-container">
+                    <button id="volumeBtn" class="control-btn">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="100">
+                </div>
+            </div>
+            <audio id="audioElement"></audio>
+        </div>
+    </div>
+
+    <script>
+   
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+
+     
+        const fileInput = document.getElementById('audio');
+        const fileLabel = document.querySelector('.file-input-label');
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                fileLabel.textContent = this.files[0].name;
+            }
+        });
+
+ 
+        const audioPlayer = document.getElementById('audioPlayer');
+        const audioElement = document.getElementById('audioElement');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeSpan = document.getElementById('currentTime');
+        const durationSpan = document.getElementById('duration');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const closePlayer = document.querySelector('.close-player');
+
+    
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+   
+        playBtn.addEventListener('click', () => {
+            audioElement.play();
+            playBtn.style.display = 'none';
+            pauseBtn.style.display = 'block';
+        });
+
+    
+        pauseBtn.addEventListener('click', () => {
+            audioElement.pause();
+            pauseBtn.style.display = 'none';
+            playBtn.style.display = 'block';
+        });
+
+       
+        audioElement.addEventListener('loadedmetadata', () => {
+            durationSpan.textContent = formatTime(audioElement.duration);
+            progressBar.max = audioElement.duration;
+        });
+
+      
+        audioElement.addEventListener('timeupdate', () => {
+            currentTimeSpan.textContent = formatTime(audioElement.currentTime);
+            progressBar.value = audioElement.currentTime;
+        });
+
+      
+        progressBar.addEventListener('input', (e) => {
+            audioElement.currentTime = e.target.value;
+        });
+
+      
+        volumeSlider.addEventListener('input', (e) => {
+            audioElement.volume = e.target.value / 100;
+        });
+
+       
+        closePlayer.addEventListener('click', () => {
+            audioElement.pause();
+            audioPlayer.style.display = 'none';
+            playBtn.style.display = 'block';
+            pauseBtn.style.display = 'none';
+        });
+
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.podcast-item')) {
+                const podcastItem = e.target.closest('.podcast-item');
+                const audioId = podcastItem.dataset.audioId;
+                const title = podcastItem.dataset.title;
+                const artist = podcastItem.dataset.artist;
+
+                if (audioId) {
+                    document.getElementById('playerTitle').textContent = title;
+                    document.getElementById('playerArtist').textContent = artist;
+                    audioElement.src = `/audio/${audioId}`;
+                    audioPlayer.style.display = 'flex';
+                    audioElement.play();
+                    playBtn.style.display = 'none';
+                    pauseBtn.style.display = 'block';
+                }
+            }
+        });
+
+   
+        audioElement.addEventListener('ended', () => {
+            playBtn.style.display = 'block';
+            pauseBtn.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
